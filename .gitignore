@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+npm-debug.log*
+
+# Hugging Face ONNX model cache (~90MB, re-downloadable)
+.models-cache/
+
+# Multer scratch dir
+uploads/
+tmp/
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

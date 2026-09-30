@@ -1,0 +1,45 @@
+{
+  "name": "rag-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Express + MongoDB Atlas Vector Search RAG backend",
+  "type": "module",
+  "engines": {
+    "node": ">=20.16.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "doctor": "tsx src/scripts/doctor.ts",
+    "selftest": "tsx src/scripts/selftest.ts",
+    "smoke": "tsx src/scripts/smoke.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^2.24.0",
+    "@huggingface/transformers": "^4.3.0",
+    "@langchain/core": "^1.2.12",
+    "@langchain/textsplitters": "^1.0.1",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mammoth": "^1.12.3",
+    "mongoose": "^9.10.2",
+    "multer": "^2.4.0",
+    "nodemon": "^3.1.14",
+    "pdf-parse": "^2.4.5",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^24.13.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

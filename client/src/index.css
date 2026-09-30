@@ -1,0 +1,668 @@
+@import "tailwindcss";
+
+/*
+ * Palette transcribed from design.md. Token names match the document's
+ * vocabulary exactly, so every value traces back to a spec entry
+ * (e.g. --color-canvas is {colors.canvas} — #faf9f5).
+ *
+ * The defining choice is the warm cream canvas. Pure white reads as "any
+ * other AI tool"; the warm tint is what makes this feel editorial.
+ */
+/*
+ * Claude-aligned token layer.
+ *
+ * The canvas is a warm ivory, not a cool gray-white — that single choice is
+ * what separates this from every other AI product. Coral (#d97757) is the
+ * signature accent; it appears on primary actions, the send button, selection
+ * state, and nothing else. Everything else earns hierarchy from surface
+ * contrast and hairlines rather than paint.
+ *
+ * One radius scale (SHAPE CONSISTENCY LOCK):
+ *   10px  buttons + inputs        (rounded-md)
+ *   14px  cards + containers      (rounded-lg)
+ *   20px  large surfaces          (rounded-xl)
+ *   999px badges + pills only     (rounded-pill)
+ */
+@theme {
+  /* ── Surfaces ──────────────────────────────────────────────────────── */
+  --color-canvas: #faf9f5;
+  --color-surface-soft: #f2ece2;
+  --color-surface-card: #ece5d8;
+  --color-cream-strong: #e2d9c8;
+  --color-raised: #fffdfa;
+
+  --color-surface-dark: #1f1e1b;
+  --color-surface-dark-elevated: #2a2825;
+  --color-surface-dark-soft: #161513;
+
+  --color-hairline: #e4dcd0;
+  --color-hairline-soft: #efe9df;
+
+  /* ── Text ──────────────────────────────────────────────────────────── */
+  --color-ink: #1a1917;
+  --color-body-strong: #2b2a27;
+  --color-body: #454440;
+  --color-muted: #6f6d66;
+  --color-muted-soft: #918e85;
+  --color-on-primary: #fffaf7;
+  --color-on-dark: #faf9f5;
+  --color-on-dark-soft: #a8a49b;
+
+  /* ── Brand ─────────────────────────────────────────────────────────── */
+  --color-primary: #d97757;
+  --color-primary-active: #c0603f;
+  --color-primary-disabled: #e6dfd8;
+  /* Coral is too light to be body text on ivory (2.9:1). This is the
+     text-safe coral and is what every inline link and label uses. */
+  --color-primary-ink: #a85334;
+  --color-primary-wash: #f6e5dc;
+
+  /* ── Semantic ──────────────────────────────────────────────────────── */
+  --color-success: #4f9d68;
+  --color-warning: #a97c11;
+  --color-error: #b83f3f;
+
+  /* ── Type ──────────────────────────────────────────────────────────── */
+  --font-display:
+    "Cormorant Garamond", "EB Garamond", Garamond, "Times New Roman", serif;
+  --font-sans:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text-display-xl: 60px;
+  --text-display-xl--line-height: 1.06;
+  --text-display-xl--letter-spacing: -1.4px;
+  --text-display-lg: 46px;
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: -1px;
+  --text-display-md: 34px;
+  --text-display-md--line-height: 1.15;
+  --text-display-md--letter-spacing: -0.5px;
+  --text-display-sm: 27px;
+  --text-display-sm--line-height: 1.22;
+  --text-display-sm--letter-spacing: -0.3px;
+  --text-title-lg: 21px;
+  --text-title-lg--line-height: 1.35;
+  --text-title-md: 18px;
+  --text-title-md--line-height: 1.4;
+  --text-title-sm: 15px;
+  --text-title-sm--line-height: 1.4;
+  /* ── Type scale ─────────────────────────────────────────────────────
+     One named step per role. Before this existed the UI carried a dozen
+     arbitrary sizes (10 / 10.5 / 11 / 11.5 / 12 / 12.5 / 13 / 13.5 / 14 /
+     15px) that all looked near-identical but drifted apart. Components now
+     reference these steps, so a spacing or colour change lands everywhere
+     at once instead of one screen at a time. */
+  --text-micro: 11px; /* badges, stage labels, scores */
+  --text-micro--line-height: 1.4;
+  --text-caption: 12px; /* metadata, hints, secondary rows */
+  --text-caption--line-height: 1.45;
+  --text-small: 13px; /* dense UI, toasts, buttons */
+  --text-small--line-height: 1.5;
+  --text-ui: 14px; /* form inputs, standard controls */
+  --text-ui--line-height: 1.5;
+  /* Named `read`, not `body`: a --text-body size token would collide with the
+     --color-body token, and `text-body` would stop resolving to a colour. */
+  --text-read: 15px; /* user messages, composer */
+  --text-read--line-height: 1.65;
+
+  /* Claude's reading size for model output. Generous leading is the single
+     biggest lever on how long-form prose feels. */
+  --text-prose: 16px;
+  --text-prose--line-height: 1.7;
+
+  /* ── Radius ────────────────────────────────────────────────────────── */
+  --radius-xs: 4px;
+  --radius-sm: 7px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  /* Was referenced by components but never declared — `rounded-pill` was
+     silently falling back to Tailwind's default radius. */
+  --radius-pill: 999px;
+
+  /* ── Depth ─────────────────────────────────────────────────────────── */
+  /* Shadows carry the warm hue of the canvas; no pure-black drop shadows. */
+  --shadow-hair: 0 1px 2px rgb(64 48 36 / 0.05);
+  --shadow-lift:
+    0 1px 2px rgb(64 48 36 / 0.05), 0 12px 28px -12px rgb(64 48 36 / 0.14);
+  --shadow-pop:
+    0 1px 2px rgb(64 48 36 / 0.06), 0 24px 48px -20px rgb(64 48 36 / 0.22);
+
+  --animate-shimmer: shimmer 1.9s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  /* ── Z-scale ───────────────────────────────────────────────────────── */
+  --z-toast: 60;
+  --z-overlay: 50;
+}
+
+/*
+ * Dark mode. The canvas drops to warm off-black rather than blue-slate so
+ * the coral accent keeps its warmth against it. Every token is remapped, so
+ * no component needs a `dark:` variant — the palette simply resolves
+ * differently. Theme lock: the app is one theme at a time, never mixed.
+ */
+.dark {
+  --color-canvas: #1b1a18;
+  --color-surface-soft: #222120;
+  --color-surface-card: #2a2825;
+  --color-cream-strong: #35322e;
+  --color-raised: #262422;
+
+  --color-surface-dark: #131211;
+  --color-surface-dark-elevated: #232120;
+  --color-surface-dark-soft: #0e0d0c;
+
+  --color-hairline: #35322e;
+  --color-hairline-soft: #2c2a27;
+
+  --color-ink: #f4f1ea;
+  --color-body-strong: #e8e4db;
+  --color-body: #cbc6bc;
+  --color-muted: #a09b91;
+  --color-muted-soft: #837e74;
+  --color-on-primary: #1b1a18;
+  --color-on-dark: #f4f1ea;
+  --color-on-dark-soft: #96918a;
+
+  --color-primary: #e08a68;
+  --color-primary-active: #ec9d7e;
+  --color-primary-ink: #f0a684;
+  --color-primary-wash: #3a2a22;
+  --color-primary-disabled: #35322e;
+
+  --color-success: #6cb585;
+  --color-warning: #d3a63f;
+  --color-error: #e07a7a;
+
+  --shadow-hair: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-lift:
+    0 1px 2px rgb(0 0 0 / 0.3), 0 12px 28px -12px rgb(0 0 0 / 0.55);
+  --shadow-pop: 0 1px 2px rgb(0 0 0 / 0.35), 0 24px 48px -20px rgb(0 0 0 / 0.6);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.04);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@layer base {
+  /* Hairline borders everywhere: the cream surfaces get one elevation step
+     rather than an ink line. */
+  * {
+    border-color: var(--color-hairline);
+  }
+
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /*
+   * Theme transition.
+   *
+   * CSS custom properties are not interpolable, so a `transition` on
+   * background-color alone animates the canvas while every border, shadow
+   * and text colour snaps instantly — the page tears instead of turning.
+   *
+   * The fix is two-layered. `document.startViewTransition` captures the old
+   * frame, applies the theme change, and cross-fades the two, so no individual
+   * property is ever seen mid-change. Behind that, the interpolable properties
+   * are transitioned too, which is what carries browsers without View
+   * Transitions — Safari and Firefox at time of writing.
+   *
+   * `@view-transition { navigation: auto }` is deliberately NOT used: it opts
+   * the whole document into cross-document view transitions, which then
+   * compete with the same-named pseudo elements and cause an in-page toggle
+   * to report "Transition was skipped". The animation is applied explicitly
+   * by the `theme-transition` class instead.
+   */
+
+  /*
+   * Fallback path (and the path taken inside the View Transition snapshot,
+   * which is not live DOM): a short opacity dip on the root. A hard cut is
+   * what makes theme switches feel like a flash; ~180ms of fade reads as one
+   * continuous surface changing.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    html.theme-transition::view-transition-old(root),
+    html.theme-transition::view-transition-new(root) {
+      animation-duration: 260ms;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html.theme-transition::view-transition-old(root) {
+      animation-name: theme-fade-out;
+    }
+    html.theme-transition::view-transition-new(root) {
+      animation-name: theme-fade-in;
+    }
+  }
+
+  @keyframes theme-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes theme-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  body {
+    @apply bg-canvas text-body font-sans antialiased;
+    min-height: 100dvh;
+    /* Warm paper is not a flat digital fill. A whisper of grain keeps the
+       ivory from reading as sterile vector white. */
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      color-mix(in oklab, var(--color-ink) 5%, transparent) 1px,
+      transparent 0
+    );
+    background-size: 4px 4px;
+    /*
+     * Transitioned rather than snapped. These four cover the visible surface
+     * change for every element in the app, and because the durations are
+     * identical they move as one layer instead of a staggered ripple.
+     */
+    transition:
+      background-color 260ms cubic-bezier(0.4, 0, 0.2, 1),
+      color 260ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 260ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 260ms cubic-bezier(0.4, 0, 0.2, 1),
+      fill 260ms cubic-bezier(0.4, 0, 0.2, 1),
+      stroke 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /*
+   * Children inherit the transition window from the body but need their own
+   * declaration, because a transition on an ancestor does not animate a
+   * descendant's own colour change. This one rule is what makes every card,
+   * border and input turn with the canvas instead of snapping ahead of it.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    body * {
+      transition-property:
+        background-color, color, border-color, box-shadow, fill, stroke;
+      transition-duration: 260ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /*
+     * Re-declare the properties components animate on purpose (transform,
+     * opacity, the springs). Without this the blanket rule above would
+     * override them with a 260ms tween and break every motion transition.
+     */
+    body [class*="motion-"],
+    body [style*="transition"],
+    body .group,
+    body button,
+    body a {
+      transition-property: revert-layer;
+    }
+
+    body .group button,
+    body .group a {
+      transition-property: color, background-color, border-color;
+    }
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-primary) 24%, transparent);
+    color: var(--color-ink);
+  }
+
+  /* Keyboard-only skip link — required for the app shell, which otherwise
+     buries the chat region behind the sidebar in the tab order. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 80;
+    transform: translateY(-200%);
+    border-radius: var(--radius-md);
+    background: var(--color-ink);
+    color: var(--color-canvas);
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: transform 0.18s ease;
+  }
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  /* Slim, unobtrusive scrollbars tuned to the warm palette. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-muted-soft) 40%, transparent);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--color-muted-soft) 65%, transparent);
+    background-clip: content-box;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+}
+
+@layer utilities {
+  /* Loading placeholder while documents process or the model searches. */
+  .shimmer {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-surface-card) 0%,
+      var(--color-cream-strong) 50%,
+      var(--color-surface-card) 100%
+    );
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+
+  /* Tabular figures on anything numeric so scores and sizes don't shimmer
+     as their digits change. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /*
+   * Dark product surface. Claude shows its "product chrome" — code, sources,
+   * tool output — on off-black, so it earns its own utility rather than a
+   * pile of one-off classes.
+   */
+  .surface-dark {
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+
+  /* Serif display: weight 400 with negative tracking is non-negotiable. */
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  /*
+   * The Anthropic-style radial spike mark. This is a brand glyph, not a
+   * system token — it is drawn here as an inline SVG data URI so it can be
+   * used as a wordmark prefix without a separate asset file.
+   */
+  .spike-mark {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='black' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1'/%3E%3C/g%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
+
+  /* Coral is the inline text-link colour. Uses the AA-safe coral variant,
+     not the display coral, which fails contrast on ivory. */
+  .text-link {
+    color: var(--color-primary-ink);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .text-link:hover {
+    text-decoration: underline;
+  }
+
+  /*
+   * The small-caps section label ("LIBRARY", "SOURCES"). It appeared
+   * hand-rolled on four surfaces with three different sizes, which is why the
+   * tracking never quite matched. One class, applied everywhere.
+   */
+  .label-caps {
+    font-size: var(--text-micro);
+    line-height: var(--text-micro--line-height);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* The secondary line under a title — filenames, stage labels, hints. */
+  .meta {
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
+    color: var(--color-muted-soft);
+  }
+
+  /* Respect users who have asked the OS to reduce motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .shimmer,
+    [class*="animate-"] {
+      animation: none !important;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/*
+ * ── Markdown rendering ───────────────────────────────────────────────
+ * Model output is prose, not UI chrome. These rules give streamed markdown a
+ * reading column with generous leading, real code blocks, and tables that
+ * don't collapse. Scoped under .md so no other surface inherits them.
+ */
+@layer components {
+  .md {
+    color: var(--color-body);
+    font-size: var(--text-prose);
+    line-height: var(--text-prose--line-height);
+    /* Orphans: a single word on the closing line of a paragraph. */
+    text-wrap: pretty;
+  }
+  .md > * + * {
+    margin-top: 1em;
+  }
+  .md > :first-child {
+    margin-top: 0;
+  }
+  .md > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* Headings. Serif at weight 400 with negative tracking is the brand voice;
+     bolding the serif reads as bombastic. */
+  .md :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  .md h1 {
+    font-size: 1.7em;
+  }
+  .md h2 {
+    font-size: 1.45em;
+  }
+  .md h3 {
+    font-size: 1.25em;
+  }
+  .md h4,
+  .md h5,
+  .md h6 {
+    font-family: var(--font-sans);
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  .md strong {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .md em {
+    font-style: italic;
+  }
+  .md del {
+    color: var(--color-muted-soft);
+  }
+
+  .md :is(ul, ol) {
+    padding-left: 1.35em;
+  }
+  .md ul {
+    list-style: disc;
+  }
+  .md ol {
+    list-style: decimal;
+  }
+  .md li::marker {
+    color: var(--color-muted-soft);
+  }
+  .md li + li {
+    margin-top: 0.4em;
+  }
+  .md li > ul,
+  .md li > ol {
+    margin-top: 0.4em;
+  }
+
+  /* Blockquote: a coral hairline, not a grey slab. */
+  .md blockquote {
+    border-left: 2px solid var(--color-primary);
+    padding-left: 1.1em;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+
+  .md hr {
+    border: 0;
+    border-top: 1px solid var(--color-hairline);
+  }
+
+  .md a {
+    color: var(--color-primary-ink);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .md a:hover {
+    text-decoration: underline;
+  }
+
+  /* Inline code. Tinted to the canvas, never a grey chip. */
+  .md :not(pre) > code {
+    background: var(--color-surface-card);
+    border-radius: var(--radius-xs);
+    padding: 0.15em 0.38em;
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    color: var(--color-primary-ink);
+    overflow-wrap: anywhere;
+  }
+
+  /* Tables scroll horizontally rather than squashing columns. */
+  .md-table-scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-lg);
+  }
+  .md table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    font-variant-numeric: tabular-nums;
+  }
+  .md thead {
+    background: var(--color-surface-soft);
+  }
+  .md :is(th, td) {
+    padding: 0.6em 0.9em;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .md th {
+    font-weight: 600;
+    color: var(--color-ink);
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .md tbody tr + tr {
+    border-top: 1px solid var(--color-hairline-soft);
+  }
+  .md td {
+    color: var(--color-body);
+  }
+
+  /* A muted variant of the same prose grammar, used when a message is
+     guidance rather than an answer (e.g. "nothing in your documents matches
+     this"). Same measure and rhythm, one step quieter — so the note reads as
+     part of the conversation rather than as an alert bolted onto it. */
+  .md-quiet {
+    color: var(--color-muted);
+  }
+
+  /*
+   * Compact variant for retrieved passages quoted inside a citation.
+   * Identical grammar to .md, tightened one step so an evidence chunk never
+   * competes with the answer it is supporting.
+   */
+  .md-dense {
+    font-size: var(--text-caption);
+    line-height: 1.62;
+  }
+  .md-dense :is(h1, h2, h3, h4, h5, h6) {
+    font-size: 1.06em;
+  }
+  .md-dense :is(ul, ol) {
+    padding-left: 1.15em;
+  }
+  .md-dense :not(pre) > code {
+    font-size: 0.85em;
+  }
+  .md-dense :is(th, td) {
+    padding: 0.4em 0.65em;
+  }
+}
